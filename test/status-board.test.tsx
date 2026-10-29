@@ -10,7 +10,7 @@ afterEach(() => {
   for (const dir of tempDirs.splice(0)) rmSync(dir, { recursive: true, force: true });
 });
 
-it('links every night and counts jobs by last status, not log events', async () => {
+it('links every night and counts run-log events, including recovered retries', async () => {
   const runsDir = mkdtempSync(join(tmpdir(), 'rig-board-'));
   tempDirs.push(runsDir);
   const event = (job: string, status: string) => JSON.stringify({
@@ -29,8 +29,8 @@ it('links every night and counts jobs by last status, not log events', async () 
   const html = await response.text();
 
   expect(response.status).toBe(200);
-  expect(html).toContain('<a href="/digest/2026-10-28">2026-10-28</a> · 1 ok / 1 retry / 1 fail');
+  expect(html).toContain('<a href="/digest/2026-10-28">2026-10-28</a> · 1 ok / 2 retry / 1 fail');
   expect(html).toContain('<a href="/digest/2026-10-27">2026-10-27</a> · 0 ok / 0 retry / 0 fail');
   expect(html.indexOf('/digest/2026-10-28')).toBeLessThan(html.indexOf('/digest/2026-10-27'));
-  expect(html).toContain('Counts are jobs by last status, not log events.');
+  expect(html).toContain('Counts are run-log events.');
 });

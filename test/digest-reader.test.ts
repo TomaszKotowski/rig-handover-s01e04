@@ -23,6 +23,7 @@ describe('readNight', () => {
   it('groups the fixture into five jobs and counts its malformed line', () => {
     const night = readNight(fixtureDir, '2026-10-28');
     expect(night?.badLines).toBe(1);
+    expect(night?.counts).toEqual({ ok: 10, retry: 4, fail: 1 });
     expect(night?.rows.map((row) => row.job)).toEqual([
       'digest/render', 'fixtures/refresh', 'lane/sync', 'notes/backup', 'rig/rotate-logs',
     ]);
@@ -45,7 +46,7 @@ describe('readNight', () => {
 
   it('distinguishes a missing night from an empty file', () => {
     const dir = nightWith();
-    expect(readNight(dir, '2026-10-28')).toEqual({ rows: [], badLines: 0 });
+    expect(readNight(dir, '2026-10-28')).toEqual({ rows: [], badLines: 0, counts: { ok: 0, retry: 0, fail: 0 } });
     expect(readNight(dir, '2026-10-27')).toBeNull();
     expect(readNight(dir, '../2026-10-28')).toBeNull();
   });

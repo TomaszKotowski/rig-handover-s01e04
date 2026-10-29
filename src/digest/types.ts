@@ -14,6 +14,7 @@ export type DigestRow = {
 export type DigestNight = {
   rows: DigestRow[];
   badLines: number;
+  counts: Record<RunStatus, number>;
 };
 
 // A missing night returns null. A present but empty night has no rows.

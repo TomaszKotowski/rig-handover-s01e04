@@ -27,7 +27,7 @@ export function StatusBoard({ status }: { status: Status }) {
           ))}
         </ul>
       )}
-      {status.nights.length > 0 && <p class="mute">Counts are jobs by last status, not log events.</p>}
+      {status.nights.length > 0 && <p class="mute">Counts are run-log events.</p>}
     </>
   );
 }

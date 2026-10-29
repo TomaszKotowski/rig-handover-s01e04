@@ -6,7 +6,7 @@ import { lastBeat, type Beat } from './heartbeat.js';
 
 export type NightStatus = {
   night: string;
-  // Counts are jobs by last status, not the number of log events.
+  // Counts are valid run-log events, including retries before a later success.
   counts: Record<RunStatus, number> | null;
 };
 
@@ -38,9 +38,7 @@ export function readStatus(config: RigConfig): Status {
     nights: nightsOnDisk(config.runsDir).map((night) => {
       const digest = readNight(config.runsDir, night);
       if (!digest) return { night, counts: null };
-      const counts = { ok: 0, retry: 0, fail: 0 };
-      for (const row of digest.rows) counts[row.lastStatus]++;
-      return { night, counts };
+      return { night, counts: digest.counts };
     }),
   };
 }
